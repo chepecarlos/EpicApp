@@ -13,6 +13,15 @@ class Bolla {
   }
 
   void Mover() {
+    if ( Y < 0) {
+      Vy = -Vy;
+    }
+    if ( X < 0 ) {
+      Vx = -Vx;
+    }
+    else if ( X > width) {
+      Vx = -Vx;
+    }
     Y += Vy;
     X += Vx;
   }
