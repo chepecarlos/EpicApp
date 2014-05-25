@@ -2,10 +2,10 @@ class Bolla {
 
   float X, Y;//Posicion
   float Vx, Vy;//Velocidad
-  float Vida = 200;//Vida
+  float Vida = 500;//Vida
   float T = 10;//Tamaño
 
-  Bolla(float TempX, float TempY,  float TempV, float Theta) {
+  Bolla(float TempX, float TempY, float TempV, float Theta) {
     println("Creado nodo V:"+ TempV + " Theta:" + Theta);
     X = TempX;
     Y = TempY;
@@ -28,7 +28,17 @@ class Bolla {
     X += Vx;
   }
 
+  boolean SigeViva() {
+    Vida--;
+     if (Vida < 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   void Mostar() {
+    fill(0,Vida);
     ellipse(X, Y, T, T);
   }
 }

@@ -1,5 +1,5 @@
 
-Bolla Prueva;
+ArrayList<Bolla> Proyectiles;
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
@@ -7,19 +7,18 @@ int AchoAtaque;
 
 void setup() {
   size(480, 800);
-  Prueva = new Bolla(100, 100, 10, 10);
   Limite = (3*height)/4;
   AchoAtaque = 200;
+  Proyectiles = new ArrayList<Bolla>();
 }
 
 void draw() {
 
   background(255);
-  Prueva.Mover();
-  Prueva.Mostar();
   line(0, Limite, width, Limite);
   ellipse(width/2, Limite, 10, 10);
   MAtaque();
+  ActualizarProyectiles();
 }
 
 void mousePressed() {
@@ -47,8 +46,7 @@ void mouseReleased() {
     }
 
 
-
-    Prueva = new Bolla(PXi, PYi, -V, Theta);
+    Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
     PXi = 0;
     PYi = 0;
   }
@@ -69,6 +67,17 @@ void MAtaque() {
     arc(PXi, PYi, AchoAtaque, AchoAtaque, 0, PI);
     fill(200);
     line(PXi, PYi, PXf, PYf);
+  }
+}
+
+void  ActualizarProyectiles() {
+  for ( int i = Proyectiles.size()-1 ; i >= 0; i--) {
+    Bolla MiniProyectil = Proyectiles.get(i);
+    MiniProyectil.Mover();
+    MiniProyectil.Mostar();
+    if (MiniProyectil.SigeViva()) {
+      Proyectiles.remove(i);
+    }
   }
 }
 
