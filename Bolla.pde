@@ -1,15 +1,17 @@
 class Bolla {
 
-  float X, Y;
-  float Vx, Vy;
-  float Vida = 200;
-  float T = 10;
+  float X, Y;//Posicion
+  float Vx, Vy;//Velocidad
+  float Vida = 200;//Vida
+  float T = 10;//Tamaño
 
-  Bolla(float TempX, float TempY, float TempVx, float TempVy) {
+  Bolla(float TempX, float TempY,  float TempV, float Theta) {
+    println("Creado nodo V:"+ TempV + " Theta:" + Theta);
     X = TempX;
     Y = TempY;
-    Vx = TempVx;
-    Vy = TempVy;
+    float V = 10*TempV;
+    Vx = V*sin(Theta);
+    Vy = V*cos(Theta);
   }
 
   void Mover() {
