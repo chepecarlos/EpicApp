@@ -1,6 +1,6 @@
 
 ArrayList<Bolla> Proyectiles;
-MalaBolla Malo;
+ArrayList<MalaBolla> Malos;
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
@@ -17,7 +17,8 @@ void setup() {
   Limite = (3*height)/4;
   AchoAtaque = 200;
   Proyectiles = new ArrayList<Bolla>();
-  Malo = new MalaBolla( 200, 1, 0.20, 0);
+  Mallos = new ArrayList<MalaBolla>();
+  //Malo = new MalaBolla( 200, 1, 0.20, 0);
 }
 
 void draw() {
@@ -77,7 +78,7 @@ void Puntos() {
   fill(255);
   text("Puntos "+Puntos, 0, Barra );
   fill(255);
-  rect(width/2-5,5,Vida*width/(200)-5, Barra-10); 
+  rect(width/2-5, 5, Vida*width/(200)-5, Barra-10);
 }
 
 void MAtaque() {
@@ -104,7 +105,15 @@ void  ActualizarProyectiles() {
 }
 
 void  ActualizarMalos() {
-  Malo.Mover();
-  Malo.Mostar();
+  for ( int i = Malo.size()-1 ; i >= 0; i--) {
+    Bolla MiniMalo = Malo.get(i);
+    MiniMalo.Mover();
+    MiniMalo.Mostar();
+    IntList Muertos = MiniMalo.Choque(Proyectiles);
+    for ( int i = Muertos.size()-1 ; i >= 0; i--) {
+      Puntos += 10;
+      Proyectiles.remove(Muertos.get(i));
+    }
+  }
 }
 
