@@ -8,30 +8,59 @@ int AchoAtaque;
 int Barra;
 int Puntos;
 int Vida;
+int Estado;
+int Nivel;
+
 void setup() {
+  //Tamaño de la aplicacion
   size(480, 800);
+
+  //Bariables Globales
+  Estado = 0;
   Barra = 30;
   Vida = 100;
   Puntos = 0;
-  textSize(Barra);
   Limite = (3*height)/4;
   AchoAtaque = 200;
+  Nivel = 0;
+
+  //Configuraciones  
+  textSize(Barra);
+
+  //Areglos con objetos del juego
   Proyectiles = new ArrayList<Bolla>();
-  Mallos = new ArrayList<MalaBolla>();
-  //Malo = new MalaBolla( 200, 1, 0.20, 0);
+  Malos = new ArrayList<MalaBolla>();
 }
 
 void draw() {
-
-  background(255);
-  line(0, Limite, width, Limite);
-  ellipse(width/2, Limite, 10, 10);
-  MAtaque();
-  ActualizarProyectiles();
-  ActualizarMalos();
-  Puntos();
+  switch(Estado)
+  {
+  case 0:
+    println("Intro");
+    Estado = 1;
+    break;
+  case 1:
+    println("Menu");
+    Estado = 2;
+    Nivel = 1;
+    break;
+  case 2:
+    println("Jugando");
+    Jugar();
+    break;
+  case 3:
+    println("Perdiste");
+    Estado = 1;
+    break;
+  default: 
+    Estado = 0;
+    break;
+  }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//Funciones con el mouse 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 void mousePressed() {
   if ( mouseY > Limite) {
     PXi = mouseX;
@@ -72,13 +101,38 @@ void mouseDragged() {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Funciones del juego 
+////////////////////////////////////////////////////////////////////////////////
+
+void Jugar() {
+  background(255);
+ 
+  MAtaque();
+  ActualizarProyectiles();
+  ActualizarMalos();
+  Divicion();
+  Puntos();
+}
+
+void Divicion() {
+  line(0, Limite, width, Limite);
+  fill(255);
+  ellipse(width/2, Limite, Barra,Barra);
+  fill(0);
+  textAlign(CENTER,CENTER);
+  text(Nivel, width/2, Limite-5);
+}
+
 void Puntos() {
   fill(0);
   rect(0, 0, width, Barra );
   fill(255);
+  textAlign( LEFT);
   text("Puntos "+Puntos, 0, Barra );
   fill(255);
   rect(width/2-5, 5, Vida*width/(200)-5, Barra-10);
+  if (Vida < 1) Estado = 3;
 }
 
 void MAtaque() {
@@ -105,14 +159,15 @@ void  ActualizarProyectiles() {
 }
 
 void  ActualizarMalos() {
-  for ( int i = Malo.size()-1 ; i >= 0; i--) {
-    Bolla MiniMalo = Malo.get(i);
+  for ( int i = Malos.size()-1 ; i >= 0; i--) {
+    MalaBolla MiniMalo = Malos.get(i);
     MiniMalo.Mover();
     MiniMalo.Mostar();
     IntList Muertos = MiniMalo.Choque(Proyectiles);
-    for ( int i = Muertos.size()-1 ; i >= 0; i--) {
+    for ( int j = Muertos.size()-1 ; j >= 0; j--) {
       Puntos += 10;
-      Proyectiles.remove(Muertos.get(i));
+      Vida += MiniMalo.Creditos;
+      Proyectiles.remove(Muertos.get(j));
     }
   }
 }
