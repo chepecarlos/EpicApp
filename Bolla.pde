@@ -19,8 +19,8 @@ class Bolla {
 
   void Mover() {
     if ( Y < Margen) {
-      Vy = -Vy;
-    }
+      Vida = 0;
+     }
     if ( X < 0 ) {
       Vx = -Vx;
     }
@@ -45,5 +45,6 @@ class Bolla {
     fill(0, Vida);
     ellipse(X, Y, T, T);
   }
+  
 }
 
