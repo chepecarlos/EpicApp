@@ -1,15 +1,23 @@
 
 ArrayList<Bolla> Proyectiles;
+MalaBolla Malo;
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
 int AchoAtaque;
-
+int Barra;
+int Puntos;
+int Vida;
 void setup() {
   size(480, 800);
+  Barra = 30;
+  Vida = 100;
+  Puntos = 0;
+  textSize(Barra);
   Limite = (3*height)/4;
   AchoAtaque = 200;
   Proyectiles = new ArrayList<Bolla>();
+  Malo = new MalaBolla( 200, 1, 0.20, 0);
 }
 
 void draw() {
@@ -19,6 +27,8 @@ void draw() {
   ellipse(width/2, Limite, 10, 10);
   MAtaque();
   ActualizarProyectiles();
+  ActualizarMalos();
+  Puntos();
 }
 
 void mousePressed() {
@@ -47,6 +57,8 @@ void mouseReleased() {
 
 
     Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
+    Puntos++;
+    Vida--;
     PXi = 0;
     PYi = 0;
   }
@@ -57,6 +69,15 @@ void mouseDragged() {
     PXf = mouseX;
     PYf = mouseY;
   }
+}
+
+void Puntos() {
+  fill(0);
+  rect(0, 0, width, Barra );
+  fill(255);
+  text("Puntos "+Puntos, 0, Barra );
+  fill(255);
+  rect(width/2-5,5,Vida*width/(200)-5, Barra-10); 
 }
 
 void MAtaque() {
@@ -76,8 +97,14 @@ void  ActualizarProyectiles() {
     MiniProyectil.Mover();
     MiniProyectil.Mostar();
     if (MiniProyectil.SigeViva()) {
+      Vida++;
       Proyectiles.remove(i);
     }
   }
+}
+
+void  ActualizarMalos() {
+  Malo.Mover();
+  Malo.Mostar();
 }
 
