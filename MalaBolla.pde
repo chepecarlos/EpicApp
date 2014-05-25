@@ -2,6 +2,7 @@
 class MalaBolla extends Bolla {
 
   int Creditos = 10;
+  int Golpe = 10;
 
   MalaBolla(float TempX, float TempY, float TempV, float Theta) {
     super(TempX, TempY, TempV, Theta);
@@ -11,7 +12,7 @@ class MalaBolla extends Bolla {
 
   IntList Choque(ArrayList<Bolla> Enanos) {
 
-    IntList Muertos = new IntList();;
+    IntList Muertos = new IntList();
     int j = 0;
     for ( int i = Enanos.size()-1 ; i >= 0; i--) {
       Bolla Pollo = Enanos.get(i);
@@ -21,6 +22,7 @@ class MalaBolla extends Bolla {
       float miniD = Pollo.T/2 + T/2;
       if ( D < miniD) {
         Vida -=  Pollo.Poder;
+        Golpe--;
         Muertos.append(i);
         j++;
       }
@@ -31,7 +33,14 @@ class MalaBolla extends Bolla {
   void Mover() {
     super.Mover();
   }
-  
+
+  boolean Ataque() {
+    if ( Limite < Y + T/4) {
+      return true;
+    }
+    return false;
+  }
+
   boolean SigeViva() {
     if (Vida < 0) {
       return true;

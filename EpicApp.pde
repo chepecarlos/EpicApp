@@ -30,6 +30,7 @@ void setup() {
   //Areglos con objetos del juego
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
+  Malos.add( new MalaBolla( 100, -100, -0.10, 0));
 }
 
 void draw() {
@@ -107,7 +108,7 @@ void mouseDragged() {
 
 void Jugar() {
   background(255);
- 
+
   MAtaque();
   ActualizarProyectiles();
   ActualizarMalos();
@@ -118,9 +119,9 @@ void Jugar() {
 void Divicion() {
   line(0, Limite, width, Limite);
   fill(255);
-  ellipse(width/2, Limite, Barra,Barra);
+  ellipse(width/2, Limite, Barra, Barra);
   fill(0);
-  textAlign(CENTER,CENTER);
+  textAlign(CENTER, CENTER);
   text(Nivel, width/2, Limite-5);
 }
 
@@ -160,15 +161,27 @@ void  ActualizarProyectiles() {
 
 void  ActualizarMalos() {
   for ( int i = Malos.size()-1 ; i >= 0; i--) {
+
     MalaBolla MiniMalo = Malos.get(i);
     MiniMalo.Mover();
     MiniMalo.Mostar();
     IntList Muertos = MiniMalo.Choque(Proyectiles);
+
     for ( int j = Muertos.size()-1 ; j >= 0; j--) {
       Puntos += 10;
-      Vida += MiniMalo.Creditos;
       Proyectiles.remove(Muertos.get(j));
     }
+
+    if (MiniMalo.SigeViva()) {
+      Vida += MiniMalo.Creditos;
+      Malos.remove(i);
+    }
+
+    if ( MiniMalo.Ataque()) {
+      Vida -= MiniMalo.Golpe;
+      Malos.remove(i);
+    }
   }
+  
 }
 
