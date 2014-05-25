@@ -1,7 +1,7 @@
 
 class MalaBolla extends Bolla {
 
-
+  int Creditos = 10;
 
   MalaBolla(float TempX, float TempY, float TempV, float Theta) {
     super(TempX, TempY, TempV, Theta);
