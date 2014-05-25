@@ -10,6 +10,7 @@ int Puntos;
 int Vida;
 int Estado;
 int Nivel;
+int Reset;
 
 void setup() {
   //Tamaño de la aplicacion
@@ -26,11 +27,6 @@ void setup() {
 
   //Configuraciones  
   textSize(Barra);
-
-  //Areglos con objetos del juego
-  Proyectiles = new ArrayList<Bolla>();
-  Malos = new ArrayList<MalaBolla>();
-  Malos.add( new MalaBolla( 100, -100, -0.10, 0));
 }
 
 void draw() {
@@ -42,16 +38,17 @@ void draw() {
     break;
   case 1:
     println("Menu");
+    Menu();
     Estado = 2;
-    Nivel = 1;
     break;
   case 2:
     println("Jugando");
     Jugar();
+    Reset = millis();
     break;
   case 3:
     println("Perdiste");
-    Estado = 1;
+    GameOver();
     break;
   default: 
     Estado = 0;
@@ -86,9 +83,7 @@ void mouseReleased() {
       Theta = T4;
     }
 
-
     Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
-    Puntos++;
     Vida--;
     PXi = 0;
     PYi = 0;
@@ -153,7 +148,6 @@ void  ActualizarProyectiles() {
     MiniProyectil.Mover();
     MiniProyectil.Mostar();
     if (MiniProyectil.SigeViva()) {
-      Vida++;
       Proyectiles.remove(i);
     }
   }
@@ -174,6 +168,7 @@ void  ActualizarMalos() {
 
     if (MiniMalo.SigeViva()) {
       Vida += MiniMalo.Creditos;
+      if ( Vida > 100) Vida = 100;
       Malos.remove(i);
     }
 
@@ -182,6 +177,44 @@ void  ActualizarMalos() {
       Malos.remove(i);
     }
   }
-  
+  if ( Malos.size() < 5) {
+    Invocar();
+  }
+}
+
+void Invocar() {
+  print("Invocando");
+  for ( int i = 0; i < Nivel*5; i++) {
+    Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4)));
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Pastalla de Game Over
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void GameOver() {
+
+  background(0);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  text("Perdiste", width/2, height/2);
+  text("\""+Puntos+"\"",  width/2, height/2 + 2*Barra);
+  Proyectiles = new ArrayList<Bolla>();
+  Malos = new ArrayList<MalaBolla>();
+  if ( millis() - Reset > 3000) Estado = 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Menu de la aplicacion
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Menu() {
+  Proyectiles = new ArrayList<Bolla>();
+  Malos = new ArrayList<MalaBolla>();
+  Vida = 100;
+  Puntos = 0;
+  Nivel = 1;
 }
 
