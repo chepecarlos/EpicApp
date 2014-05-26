@@ -11,6 +11,11 @@ int Vida;
 int Estado;
 int Nivel;
 int Reset;
+int OpModo;
+PShape Logo;
+PShape EpicLogo;
+StringList Modos;
+
 
 void setup() {
   //Tamaño de la aplicacion
@@ -21,12 +26,20 @@ void setup() {
   Barra = 30;
   Vida = 100;
   Puntos = 0;
+  OpModo = -1;
   Limite = (3*height)/4;
   AchoAtaque = 200;
   Nivel = 0;
+  Logo = loadShape("logo.svg");
+  EpicLogo = loadShape("EpicLogo.svg");
+  Reset = millis();
 
   //Configuraciones  
   textSize(Barra);
+  Modos = new StringList();
+  Modos.append("ARCADE");
+  Modos.append("SOVEVIVE");
+  Modos.append("Los Pollos");
 }
 
 void draw() {
@@ -34,12 +47,11 @@ void draw() {
   {
   case 0:
     println("Intro");
-    Estado = 1;
+    Bienbenida();
     break;
   case 1:
     println("Menu");
     Menu();
-    Estado = 2;
     break;
   case 2:
     println("Jugando");
@@ -60,40 +72,55 @@ void draw() {
 //Funciones con el mouse 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void mousePressed() {
-  if ( mouseY > Limite) {
-    PXi = mouseX;
-    PYi = mouseY;
-    PXf = PXi;
-    PYf = PYi;
+
+  if ( Estado == 2) {
+    if ( mouseY > Limite) {
+      PXi = mouseX;
+      PYi = mouseY;
+      PXf = PXi;
+      PYf = PYi;
+    }
+  }
+  else if ( Estado == 1) {
+    float Pollo = height/8;
+    for (int i = 0; i < Modos.size(); i++) {
+      if (mouseY > (i+1.5)*Pollo && mouseY < (i+2.5)*Pollo) {
+        OpModo = i;
+      }
+    }
   }
 }
 
 void mouseReleased() {
-  if ( mouseY > Limite) {
-    float Theta = 0;
-    float V =  dist( PXf, PYf, PXi, PYi)/(AchoAtaque/2);
-    if ( V > 0.99)  V = 1;
-    else if ( V < 0.20) V = 0.20;
+  if ( Estado == 2) {
+    if ( mouseY > Limite) {
+      float Theta = 0;
+      float V =  dist( PXf, PYf, PXi, PYi)/(AchoAtaque/2);
+      if ( V > 0.99)  V = 1;
+      else if ( V < 0.20) V = 0.20;
 
-    if ( abs(PYi-PYf) != 0) {
-      float T1= PXi-PXf; 
-      float T2= PYi-PYf;
-      float T3 = T1/T2;
-      float T4 = atan(T3);
-      Theta = T4;
+      if ( abs(PYi-PYf) != 0) {
+        float T1= PXi-PXf; 
+        float T2= PYi-PYf;
+        float T3 = T1/T2;
+        float T4 = atan(T3);
+        Theta = T4;
+      }
+
+      Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
+      Vida--;
+      PXi = 0;
+      PYi = 0;
     }
-
-    Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
-    Vida--;
-    PXi = 0;
-    PYi = 0;
   }
 }
 
 void mouseDragged() {
-  if ( (PXi != 0 || PYi != 0)  & mouseY > PYi) {
-    PXf = mouseX;
-    PYf = mouseY;
+  if ( Estado == 2) {
+    if ( (PXi != 0 || PYi != 0)  & mouseY > PYi) {
+      PXf = mouseX;
+      PYf = mouseY;
+    }
   }
 }
 
@@ -137,8 +164,10 @@ void MAtaque() {
     ellipseMode(CENTER);
     noFill();
     arc(PXi, PYi, AchoAtaque, AchoAtaque, 0, PI);
+
     fill(200);
     line(PXi, PYi, PXf, PYf);
+    ellipse(PXi, PYi, 10, 10);
   }
 }
 
@@ -200,7 +229,7 @@ void GameOver() {
   fill(255);
   textAlign(CENTER, CENTER);
   text("Perdiste", width/2, height/2);
-  text("\""+Puntos+"\"",  width/2, height/2 + 2*Barra);
+  text("\""+Puntos+"\"", width/2, height/2 + 2*Barra);
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
   if ( millis() - Reset > 3000) Estado = 1;
@@ -211,10 +240,61 @@ void GameOver() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Menu() {
+  background(255);
+  Opciones();
+  if ( OpModo == 0) {
+    Estado = 2;
+    Empezar();
+    Reset =  millis();
+  }
+}
+
+void Opciones() {
+  pushStyle();
+  float Pollo = height/8;
+
+  shapeMode(CENTER);
+  shape(EpicLogo, width/2, height/8-height/16, height/4, height/8);
+
+
+  rectMode(CENTER);
+  textAlign(CENTER, CENTER);
+  textSize(80);
+
+  for (int i = 0; i < Modos.size(); i++) {
+    color B = color(255);
+    color T = color(0);
+
+    if (mouseY > (i+1.5)*Pollo && mouseY < (i+2.5)*Pollo) {
+      B = color(0);
+      T = color(255);
+    }
+
+    fill(B);
+    rect(width/2, (i+2)*Pollo, width - 20, Pollo-20, 20);
+    fill(T);
+    text(Modos.get(i), width/2, (i+2)*Pollo);
+  }
+  popStyle();
+}
+
+void Empezar() {
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
   Vida = 100;
   Puntos = 0;
   Nivel = 1;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Inicio de la aplicacion
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Bienbenida() {
+  background(0);
+  shapeMode(CENTER);
+  shape(Logo, width/2, height/2, width, width);
+  if ( millis() - Reset > 3000) {
+    Estado = 1;
+    Reset =  millis();
+  }
 }
 
