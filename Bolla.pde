@@ -7,7 +7,7 @@ class Bolla {
   float T = 10;//Tamaño
   float Margen = 30;
   float Poder = 100;
-
+  
   Bolla(float TempX, float TempY, float TempV, float Theta) {
     println("Creado nodo V:"+ TempV + " Theta:" + Theta);
     X = TempX;
@@ -15,12 +15,14 @@ class Bolla {
     float V = 10*TempV;
     Vx = V*sin(Theta);
     Vy = V*cos(Theta);
+    Poder = (Poder*(-V))/10;
+    println(Poder);
   }
 
   void Mover() {
     if ( Y < Margen) {
       Vida = 0;
-     }
+    }
     if ( X < 0 ) {
       Vx = -Vx;
     }
@@ -45,6 +47,5 @@ class Bolla {
     fill(0, Vida);
     ellipse(X, Y, T, T);
   }
-  
 }
 

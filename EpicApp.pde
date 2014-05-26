@@ -54,7 +54,7 @@ void draw() {
     Menu();
     break;
   case 2:
-    println("Jugando");
+   // println("Jugando Arcade");
     Jugar();
     Reset = millis();
     break;
@@ -148,7 +148,7 @@ void Divicion() {
   ellipse(width/2, Limite, Barra, Barra);
   fill(0);
   textAlign(CENTER, CENTER);
-  text(Nivel, width/2, Limite-5);
+  text(Nivel, width/2, Limite-6);
   popStyle();
 }
 
@@ -251,6 +251,7 @@ void Menu() {
     Estado = 2;
     Empezar();
     Reset =  millis();
+    OpModo = 0;
   }
 }
 
