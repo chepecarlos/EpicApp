@@ -1,15 +1,17 @@
 
 ArrayList<Bolla> Proyectiles;
 ArrayList<MalaBolla> Malos;
+XML SuperData;
+
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
 int AchoAtaque;
 int Barra;
-int Puntos;
+int Puntos, MasPuntos;
 int Vida;
 int Estado;
-int Nivel;
+int Nivel, MasNivel;
 int Reset;
 int OpModo;
 PShape Logo;
@@ -30,11 +32,20 @@ void setup() {
   Limite = (3*height)/4;
   AchoAtaque = 200;
   Nivel = 0;
-  Logo = loadShape("logo.svg");
-  EpicLogo = loadShape("EpicLogo.svg");
   Reset = millis();
 
-  //Configuraciones  
+  //Vectores para mostar
+  Logo = loadShape("logo.svg");
+  EpicLogo = loadShape("EpicLogo.svg");
+
+
+  //Lectura XML
+  SuperData = loadXML("SuperData.xml");
+  XML firstChild = SuperData.getChild("MP");
+  int a = firstChild.getIntContent();
+  MasPuntos = a;
+
+  //Configuraciones
   textSize(Barra);
   Modos = new StringList();
   Modos.append("ARCADE");
@@ -43,6 +54,7 @@ void setup() {
 }
 
 void draw() {
+  println("Maxima Cantidad "+ MasPuntos);
   switch(Estado)
   {
   case 0:
@@ -54,13 +66,16 @@ void draw() {
     Menu();
     break;
   case 2:
-   // println("Jugando Arcade");
+    // println("Jugando Arcade");
     Jugar();
     Reset = millis();
     break;
   case 3:
     println("Perdiste");
     GameOver();
+    break;
+  case 4:
+    println("Nivel");
     break;
   default: 
     Estado = 0;
@@ -109,9 +124,9 @@ void mouseReleased() {
 
       Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
       Vida--;
-      PXi = 0;
-      PYi = 0;
     }
+    PXi = 0;
+    PYi = 0;
   }
 }
 
@@ -143,7 +158,7 @@ void Divicion() {
   strokeWeight(4);
   line(0, Limite, width, Limite);
   rectMode(CENTER);
-  rect(width/2, Limite, Vida*width/100, Barra/4,5);
+  rect(width/2, Limite, Vida*width/100, Barra/4, 5);
   fill(255);
   ellipse(width/2, Limite, Barra, Barra);
   fill(0);
@@ -169,7 +184,6 @@ void MAtaque() {
     ellipseMode(CENTER);
     noFill();
     arc(PXi, PYi, AchoAtaque, AchoAtaque, 0, PI);
-
     fill(200);
     line(PXi, PYi, PXf, PYf);
     ellipse(PXi, PYi, 10, 10);
@@ -235,6 +249,7 @@ void GameOver() {
   textAlign(CENTER, CENTER);
   text("Perdiste", width/2, height/2);
   text("\""+Puntos+"\"", width/2, height/2 + 2*Barra);
+  text("Maximo: "+MasPuntos, width/2, height/2 + 4*Barra);
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
   if ( millis() - Reset > 3000) Estado = 1;
@@ -251,7 +266,7 @@ void Menu() {
     Estado = 2;
     Empezar();
     Reset =  millis();
-    OpModo = 0;
+    OpModo = -1;
   }
 }
 
