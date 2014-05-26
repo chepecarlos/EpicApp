@@ -7,16 +7,16 @@ class Bolla {
   float T = 10;//Tamaño
   float Margen = 30;
   float Poder = 100;
-  
+
   Bolla(float TempX, float TempY, float TempV, float Theta) {
-    println("Creado nodo V:"+ TempV + " Theta:" + Theta);
+    // println("Creado nodo V:"+ TempV + " Theta:" + Theta);
     X = TempX;
     Y = TempY;
     float V = 10*TempV;
     Vx = V*sin(Theta);
     Vy = V*cos(Theta);
     Poder = (Poder*(-V))/10;
-    println(Poder);
+    //println(Poder);
   }
 
   void Mover() {

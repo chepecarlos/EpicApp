@@ -10,6 +10,12 @@ class MalaBolla extends Bolla {
     T = 100;
     Margen = -height;
   }
+  
+  MalaBolla(float TempX, float TempY, float TempV, float Theta, float TempT) {
+    super(TempX, TempY, TempV, Theta);
+    T = TempT;
+    Margen = -height;
+  }
 
   IntList Choque(ArrayList<Bolla> Enanos) {
 
