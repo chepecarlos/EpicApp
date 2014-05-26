@@ -139,12 +139,17 @@ void Jugar() {
 }
 
 void Divicion() {
+  pushStyle();
+  strokeWeight(4);
   line(0, Limite, width, Limite);
+  rectMode(CENTER);
+  rect(width/2, Limite, Vida*width/100, Barra/4,5);
   fill(255);
   ellipse(width/2, Limite, Barra, Barra);
   fill(0);
   textAlign(CENTER, CENTER);
   text(Nivel, width/2, Limite-5);
+  popStyle();
 }
 
 void Puntos() {
