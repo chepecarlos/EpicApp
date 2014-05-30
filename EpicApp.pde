@@ -1,5 +1,7 @@
 // Importando librerias
 import ketai.data.*;// Libreria de lite
+import android.content.Context;
+import android.os.Vibrator;
 
 // Areglos dinamicos 
 ArrayList<Bolla> Proyectiles;
@@ -21,6 +23,9 @@ PShape Logo;
 PShape EpicLogo;
 StringList Modos;
 KetaiSQLite db;
+Vibrator Vibrador;     
+
+// Base de datos
 String CREATE_DB_SQL = "CREATE TABLE preferencias ( op TEXT NOT NULL PRIMARY KEY , data FLOAT NOT NULL DEFAULT '0' );";
 
 
@@ -38,6 +43,7 @@ void setup() {
   AchoAtaque = 200;
   Nivel = 0;
   Reset = millis();
+  Vibrador = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
   //Vectores para mostar
   Logo = loadShape("logo.svg");
@@ -57,7 +63,7 @@ void setup() {
   {
     if (!db.tableExists("preferencias")) {
       db.execute(CREATE_DB_SQL);
-      if (!db.execute("INSERT into preferencias (`op`,`data`) VALUES ('MaxPuntos', '"+100+"' )")) {
+      if (!db.execute("INSERT into preferencias (`op`,`data`) VALUES ('MaxPuntos', '"+0+"' )")) {
         println("Error en SQLite");
       }
     }
@@ -193,9 +199,8 @@ void Puntos() {
   rect(0, 0, width, Barra );
   fill(255);
   textAlign( LEFT);
-  text("Puntos "+Puntos, 0, Barra );
+  text("Puntos "+Puntos+" Max"+MaxPuntos, 0, Barra );
   fill(255);
-  rect(width/2-5, 5, Vida*width/(200)-5, Barra-10);
   if (Vida < 1) Estado = 3;
 }
 
@@ -244,6 +249,7 @@ void  ActualizarMalos() {
     if ( MiniMalo.Ataque()) {
       Vida -= MiniMalo.Golpe;
       Malos.remove(i);
+      Vibrador.vibrate(100); 
     }
   }
   if ( Malos.size() < 5*(Puntos/500+1)) {
@@ -252,7 +258,7 @@ void  ActualizarMalos() {
 }
 
 void Invocar() {
-  print("Invocando");
+  //print("Invocando");
   for ( int i = 0; i < Nivel*5; i++) {
     Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
   }
@@ -316,7 +322,7 @@ void Opciones() {
   textAlign(CENTER, CENTER);
   textSize(80);
 
-  for (int i = 0; i < Modos.size(); i++) {
+  for (int i = 0; i < Modos.size (); i++) {
     color B = color(255);
     color T = color(0);
 
