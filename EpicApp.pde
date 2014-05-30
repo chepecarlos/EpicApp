@@ -1,14 +1,17 @@
+// Importando librerias
+import ketai.data.*;// Libreria de lite
 
+// Areglos dinamicos 
 ArrayList<Bolla> Proyectiles;
 ArrayList<MalaBolla> Malos;
-XML SuperData;
 
+// Variables Globales
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
 int AchoAtaque;
 int Barra;
-int Puntos, MasPuntos;
+int Puntos, MaxPuntos;
 int Vida;
 int Estado;
 int Nivel, MasNivel;
@@ -17,6 +20,8 @@ int OpModo;
 PShape Logo;
 PShape EpicLogo;
 StringList Modos;
+KetaiSQLite db;
+String CREATE_DB_SQL = "CREATE TABLE preferencias ( op TEXT NOT NULL PRIMARY KEY , data FLOAT NOT NULL DEFAULT '0' );";
 
 
 void setup() {
@@ -39,30 +44,47 @@ void setup() {
   EpicLogo = loadShape("EpicLogo.svg");
 
 
-  //Lectura XML
-  SuperData = loadXML("SuperData.xml");
-  XML firstChild = SuperData.getChild("MP");
-  int a = firstChild.getIntContent();
-  MasPuntos = a;
-
   //Configuraciones
   textSize(Barra);
   Modos = new StringList();
   Modos.append("ARCADE");
   Modos.append("SOVEVIVE");
   Modos.append("Los Pollos");
+
+  //Base de datos 
+  db = new KetaiSQLite( this);
+  if ( db.connect() )
+  {
+    if (!db.tableExists("preferencias")) {
+      db.execute(CREATE_DB_SQL);
+      if (!db.execute("INSERT into preferencias (`op`,`data`) VALUES ('MaxPuntos', '"+100+"' )")) {
+        println("Error en SQLite");
+      }
+    }
+    println("La cantidad de informacion de la db es: "+db.getRecordCount("Preferencias"));
+
+    db.query( "SELECT * FROM preferencias" );
+
+    while ( db.next () )
+    {
+      if ( db.getString("op").equals("MaxPuntos")) {
+        MaxPuntos = db.getInt("data");
+      }
+      //println( db.getString("op")+ " "+db.getInt("data")+" "+MaxPuntos+" "+db.getRecordCount("Preferencias"));
+    }
+  }
 }
 
 void draw() {
-  println("Maxima Cantidad "+ MasPuntos);
+  //println("Maxima Cantidad "+ MaxPuntos);
   switch(Estado)
   {
   case 0:
-    println("Intro");
+    //println("Intro");
     Bienbenida();
     break;
   case 1:
-    println("Menu");
+    //println("Menu");
     Menu();
     break;
   case 2:
@@ -71,7 +93,7 @@ void draw() {
     Reset = millis();
     break;
   case 3:
-    println("Perdiste");
+    // println("Perdiste");
     GameOver();
     break;
   case 4:
@@ -95,10 +117,9 @@ void mousePressed() {
       PXf = PXi;
       PYf = PYi;
     }
-  }
-  else if ( Estado == 1) {
+  } else if ( Estado == 1) {
     float Pollo = height/8;
-    for (int i = 0; i < Modos.size(); i++) {
+    for (int i = 0; i < Modos.size (); i++) {
       if (mouseY > (i+1.5)*Pollo && mouseY < (i+2.5)*Pollo) {
         OpModo = i;
       }
@@ -191,7 +212,7 @@ void MAtaque() {
 }
 
 void  ActualizarProyectiles() {
-  for ( int i = Proyectiles.size()-1 ; i >= 0; i--) {
+  for ( int i = Proyectiles.size ()-1; i >= 0; i--) {
     Bolla MiniProyectil = Proyectiles.get(i);
     MiniProyectil.Mover();
     MiniProyectil.Mostar();
@@ -202,14 +223,14 @@ void  ActualizarProyectiles() {
 }
 
 void  ActualizarMalos() {
-  for ( int i = Malos.size()-1 ; i >= 0; i--) {
+  for ( int i = Malos.size ()-1; i >= 0; i--) {
 
     MalaBolla MiniMalo = Malos.get(i);
     MiniMalo.Mover();
     MiniMalo.Mostar();
     IntList Muertos = MiniMalo.Choque(Proyectiles);
 
-    for ( int j = Muertos.size()-1 ; j >= 0; j--) {
+    for ( int j = Muertos.size ()-1; j >= 0; j--) {
       Puntos += 10;
       Proyectiles.remove(Muertos.get(j));
     }
@@ -233,7 +254,7 @@ void  ActualizarMalos() {
 void Invocar() {
   print("Invocando");
   for ( int i = 0; i < Nivel*5; i++) {
-    Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4),random(50,200)));
+    Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
   }
 }
 
@@ -243,12 +264,18 @@ void Invocar() {
 
 
 void GameOver() {
+  if ( Puntos > MaxPuntos) {
 
-  if ( Puntos > MasPuntos) {
-    XML firstChild = SuperData.getChild("MP");
-    firstChild.setContent(Puntos+"");
-    MasPuntos = Puntos;
-    saveXML(SuperData, "SuperData.xml");
+    db.execute( "UPDATE Preferencias set data = '"+Puntos+"' where op='MaxPuntos'" );
+
+    db.query( "SELECT * FROM preferencias" );
+
+    while ( db.next () )
+    {
+      if ( db.getString("op").equals("MaxPuntos")) {
+        MaxPuntos = db.getInt("data");
+      }
+    }
   }
 
   background(0);
@@ -256,7 +283,7 @@ void GameOver() {
   textAlign(CENTER, CENTER);
   text("Perdiste", width/2, height/2);
   text("\""+Puntos+"\"", width/2, height/2 + 2*Barra);
-  text("Maximo: "+MasPuntos, width/2, height/2 + 4*Barra);
+  text("Maximo: "+MaxPuntos, width/2, height/2 + 4*Barra);
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
   if ( millis() - Reset > 3000) Estado = 1;
