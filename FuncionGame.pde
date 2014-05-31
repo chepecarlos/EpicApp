@@ -15,12 +15,13 @@ void Jugar() {
 void Divicion() {
   pushStyle();
   strokeWeight(4);
+  fill(ColorBase);
   line(0, Limite, width, Limite);
   rectMode(CENTER);
   rect(width/2, Limite, Vida*width/100, Barra/4, 5);
-  fill(255);
+  fill(ColorNeutro);
   ellipse(width/2, Limite, Barra, Barra);
-  fill(0);
+  fill(ColorBase);
   textAlign(CENTER, CENTER);
   text(Nivel, width/2, Limite-6);
   popStyle();
@@ -38,11 +39,10 @@ void Puntos() {
 
 void MAtaque() {
   if ( PXi != 0 || PYi != 0) {
-
     ellipseMode(CENTER);
     noFill();
     arc(PXi, PYi, AchoAtaque, AchoAtaque, 0, PI);
-    fill(200);
+    fill(ColorBase);
     line(PXi, PYi, PXf, PYf);
     ellipse(PXi, PYi, 10, 10);
   }
@@ -95,3 +95,4 @@ void Invocar() {
     Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
   }
 }
+

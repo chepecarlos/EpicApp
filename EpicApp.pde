@@ -44,8 +44,8 @@ void setup() {
   AchoAtaque = 200;
   Nivel = 0;
   Reset = millis();
-  ColorBase = color(255,0,0);//Negro
-  ColorNeutro = color(0,0,255);//Blanco
+  ColorBase = color( 0 );//Negro
+  ColorNeutro = color( 255 );//Blanco
   Vibrador = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
   //Vectores para mostar
@@ -228,12 +228,12 @@ void Opciones() {
   textSize(80);
 
   for (int i = 0; i < Modos.size (); i++) {
-    color B = color(255);
-    color T = color(0);
+    color B = ColorNeutro;
+    color T = ColorBase;
 
     if (mouseY > (i+1.5)*Pollo && mouseY < (i+2.5)*Pollo) {
-      B = color(0);
-      T = color(255);
+      B = ColorBase;
+      T = ColorNeutro;
     }
 
     fill(B);
