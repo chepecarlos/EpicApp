@@ -65,11 +65,11 @@ void  ActualizarMalos() {
     MalaBolla MiniMalo = Malos.get(i);
     MiniMalo.Mover();
     MiniMalo.Mostar();
-    IntList Muertos = MiniMalo.Choque(Proyectiles);
+    int Muertos = MiniMalo.Choque(Proyectiles);
 
-    for ( int j = Muertos.size ()-1; j >= 0; j--) {
+    if ( Muertos >= 0 ) {
+      Proyectiles.remove(Muertos);
       Puntos += 10;
-      Proyectiles.remove(Muertos.get(j));
     }
 
     if (MiniMalo.SigeViva()) {
@@ -84,7 +84,7 @@ void  ActualizarMalos() {
       Vibrador.vibrate(100);
     }
   }
-  if ( Malos.size() < 5*(Puntos/500+1)) {
+  if ( Malos.size() < 20*(Puntos/500+1)) {
     Invocar();
   }
 }

@@ -10,18 +10,17 @@ class MalaBolla extends Bolla {
     T = 100;
     Margen = -height;
   }
-  
+
   MalaBolla(float TempX, float TempY, float TempV, float Theta, float TempT) {
     super(TempX, TempY, TempV, Theta);
     T = TempT;
     Margen = -height;
   }
 
-  IntList Choque(ArrayList<Bolla> Enanos) {
+  int Choque(ArrayList<Bolla> Enanos) {
 
-    IntList Muertos = new IntList();
     int j = 0;
-    for ( int i = Enanos.size()-1 ; i >= 0; i--) {
+    for ( int i = Enanos.size ()-1; i >= 0; i--) {
       Bolla Pollo = Enanos.get(i);
       float Dx = Pollo.X - X;
       float Dy = Pollo.Y - Y;
@@ -30,11 +29,11 @@ class MalaBolla extends Bolla {
       if ( D < miniD) {
         Vida -=  Pollo.Poder;
         Golpe--;
-        Muertos.append(i);
         j++;
+        return i;
       }
     }
-    return Muertos;
+    return -1;
   }
 
   void Mover() {
