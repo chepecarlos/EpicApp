@@ -32,7 +32,7 @@ String CREATE_DB_SQL = "CREATE TABLE preferencias ( op TEXT NOT NULL PRIMARY KEY
 
 void setup() {
   //Tamaño de la aplicacion
-  size(480, 800);
+  size(displayWidth, displayHeight);
 
   //Bariables Globales
   Estado = 0;
