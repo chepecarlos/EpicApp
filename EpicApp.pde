@@ -115,8 +115,8 @@ void draw() {
     break;
   }
   
-  println((millis() - Tiempo ) );
-   Tiempo = millis();
+ // println((millis() - Tiempo ) );
+ //  Tiempo = millis();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,6 @@ void mouseReleased() {
       }
 
       Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
-      Vida--;
     }
     PXi = 0;
     PYi = 0;
