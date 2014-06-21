@@ -93,6 +93,7 @@ void Invocar() {
   //print("Invocando");
   for ( int i = 0; i < Nivel*5; i++) {
     Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
+    Malos.add( new MalaBuena( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
   }
 }
 

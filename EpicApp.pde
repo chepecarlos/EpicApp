@@ -19,6 +19,7 @@ int Estado;
 int Nivel, MasNivel;
 int Reset;
 int OpModo;
+float Tiempo;
 PShape Logo;
 PShape EpicLogo;
 StringList Modos;
@@ -44,6 +45,7 @@ void setup() {
   AchoAtaque = 200;
   Nivel = 0;
   Reset = millis();
+  Tiempo = millis(); 
   ColorBase = color( 0 );//Negro
   ColorNeutro = color( 255 );//Blanco
   Vibrador = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -112,6 +114,9 @@ void draw() {
     Estado = 0;
     break;
   }
+  
+  println((millis() - Tiempo ) );
+   Tiempo = millis();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

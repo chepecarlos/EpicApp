@@ -44,10 +44,10 @@ class Bolla {
   }
 
   void Mostar() {
-    pushStyle();
+    //pushStyle();
     fill(ColorBase, Vida);
     ellipse(X, Y, T, T);
-    popStyle();
+    //popStyle();
   }
 }
 
