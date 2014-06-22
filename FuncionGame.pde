@@ -33,7 +33,7 @@ void Puntos() {
   rect(0, 0, width, Barra );
   fill(ColorNeutro);
   textAlign( LEFT);
-  text("Puntos "+Puntos+" Max"+MaxPuntos, 0, Barra );
+  text("Puntos "+Puntos+" Max "+MaxPuntos + " $ " + Rupias, 0, Barra );
   if (Vida < 1) Estado = 3;
 }
 
@@ -75,6 +75,7 @@ void  ActualizarMalos() {
     if (MiniMalo.SigeViva()) {
       Vida += MiniMalo.Creditos;
       if ( Vida > 100) Vida = 100;
+      //AnadirPoder(MiniMalo.Poder());
       Malos.remove(i);
     }
 
@@ -97,7 +98,7 @@ void Invocar() {
     if ( OP > PEspecial) {
       Malos.add( new MalaBolla( random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
     } else {
-      InvocarEspecial(0);
+      InvocarEspecial(1);
     }
   }
 }
@@ -107,6 +108,17 @@ void InvocarEspecial(int i) {
   {
   case 0:
     Malos.add( new MalaBuena(random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
+    break;
+  case 1:
+    Malos.add( new MalaFuego(random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
+    break;
+  }
+}
+
+void  AnadirPoder(int P) {
+  switch(P) {
+  case 1:
+    Poderes.add( new BollaRoja());
     break;
   }
 }

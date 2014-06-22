@@ -19,7 +19,6 @@ class MalaBolla extends Bolla {
 
   int Choque(ArrayList<Bolla> Enanos) {
 
-    int j = 0;
     for ( int i = Enanos.size ()-1; i >= 0; i--) {
       Bolla Pollo = Enanos.get(i);
       float Dx = Pollo.X - X;
@@ -29,7 +28,6 @@ class MalaBolla extends Bolla {
       if ( D < miniD) {
         Vida -=  Pollo.Poder;
         Golpe--;
-        j++;
         return i;
       }
     }
@@ -54,6 +52,10 @@ class MalaBolla extends Bolla {
     else {
       return false;
     }
+  }
+  
+  int Poder(){
+    return 0;
   }
 }
 

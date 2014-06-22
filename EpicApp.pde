@@ -6,6 +6,7 @@ import android.os.Vibrator;
 // Areglos dinamicos 
 ArrayList<Bolla> Proyectiles;
 ArrayList<MalaBolla> Malos;
+ArrayList<Bolla> Poderes;
 
 // Variables Globales
 int Limite;
@@ -14,6 +15,7 @@ int PXf, PYf;
 int AchoAtaque;
 int Barra;
 int Puntos, MaxPuntos;
+long Rupias, Rupiass;
 int Vida;
 int Estado;
 int Nivel, MasNivel;
@@ -28,8 +30,9 @@ Vibrator Vibrador;
 color ColorBase, ColorNeutro;
 
 // Base de datos
-String CREATE_DB_SQL = "CREATE TABLE preferencias ( op TEXT NOT NULL PRIMARY KEY , data FLOAT NOT NULL DEFAULT '0' );";
-
+String SQL_Preferencias = "CREATE TABLE preferencias ( op TEXT NOT NULL PRIMARY KEY , data FLOAT NOT NULL DEFAULT '0' );";
+String SQL_Poderes = " CREATE TABLE Poderes ( Poder Text NOT NULL PRIMARY KEY, NivelActual int NOT NULL DEFAULT '0', Descripcion Text, Icono Text);";
+String SQL_EstadoPoderes = "CREATE TABLE EstadoPoderes ( Poder Text NOT NULL, Nivel int NOT NULL DEFAULT '1', Costo int NOT NULL, Probabilidad float NOT NULL DEFAULT '0.01');"; 
 
 void setup() {
   //Tamaño de la aplicacion
@@ -61,17 +64,31 @@ void setup() {
   Modos.append("ARCADE");
   Modos.append("SOVEVIVE");
   Modos.append("Los Pollos");
+  Modos.append("Tienda");
+  Modos.append("Configurar");
 
   //Base de datos 
   db = new KetaiSQLite( this);
   if ( db.connect() )
   {
     if (!db.tableExists("preferencias")) {
-      db.execute(CREATE_DB_SQL);
+      db.execute(SQL_Preferencias);
       if (!db.execute("INSERT into preferencias (`op`,`data`) VALUES ('MaxPuntos', '"+0+"' )")) {
         println("Error en SQLite");
       }
+      if (!db.execute("INSERT into preferencias (`op`,`data`) VALUES ('Rupias', '"+0+"' )")) {
+        println("Error en SQLite");
+      }
     }
+
+    if (!db.tableExists("Poderes")) {
+      db.execute(SQL_Poderes);
+    }
+
+    if (!db.tableExists("EstadoPoderes")) {
+      db.execute(SQL_EstadoPoderes);
+    }
+
     println("La cantidad de informacion de la db es: "+db.getRecordCount("Preferencias"));
 
     db.query( "SELECT * FROM preferencias" );
@@ -80,6 +97,9 @@ void setup() {
     {
       if ( db.getString("op").equals("MaxPuntos")) {
         MaxPuntos = db.getInt("data");
+      } else if ( db.getString("op").equals("Rupias")) {
+        Rupias = db.getInt("data");
+        Rupiass = Rupias;
       }
       //println( db.getString("op")+ " "+db.getInt("data")+" "+MaxPuntos+" "+db.getRecordCount("Preferencias"));
     }
@@ -90,33 +110,35 @@ void draw() {
   //println("Maxima Cantidad "+ MaxPuntos);
   switch(Estado)
   {
-  case 0:
-    //println("Intro");
+  case 0://Intro del juego
     Bienbenida();
     break;
-  case 1:
-    //println("Menu");
+  case 1://Escoje que hacer
     Menu();
     break;
-  case 2:
-    // println("Jugando Arcade");
+  case 2:// Ajugar 
     Jugar();
     Reset = millis();
     break;
-  case 3:
-    // println("Perdiste");
+  case 3:// Perdiste el juego
     GameOver();
     break;
   case 4:
     println("Nivel");
     break;
+  case 5://Tienda para compara poderes
+    Tienda();
+    break;
+  case 6: 
+    Configurar();
+    break;
   default: 
     Estado = 0;
     break;
   }
-  
- // println((millis() - Tiempo ) );
- //  Tiempo = millis();
+
+  // println((millis() - Tiempo ) );
+  //  Tiempo = millis();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,6 +214,13 @@ void GameOver() {
       }
     }
   }
+  
+  if(Rupias == Rupiass){
+    Rupias += Puntos/10;
+    db.execute( "UPDATE Preferencias set data = '"+Rupias+"' where op='Rupias'" );
+
+  
+  }
 
   background(ColorBase);
   fill(255);
@@ -199,9 +228,12 @@ void GameOver() {
   text("Perdiste", width/2, height/2);
   text("\""+Puntos+"\"", width/2, height/2 + 2*Barra);
   text("Maximo: "+MaxPuntos, width/2, height/2 + 4*Barra);
+  text("$" + Rupias,  width/2, height/2 + 6*Barra);
   Proyectiles = new ArrayList<Bolla>();
   Malos = new ArrayList<MalaBolla>();
-  if ( millis() - Reset > 3000) Estado = 1;
+  if ( millis() - Reset > 3000) {Estado = 1;
+   Rupiass = Rupias;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +248,8 @@ void Menu() {
     Empezar();
     Reset =  millis();
     OpModo = -1;
+  } else if ( OpModo == 3) {
+    Estado = 5;
   }
 }
 
@@ -265,6 +299,32 @@ void Bienbenida() {
   if ( millis() - Reset > 3000) {
     Estado = 1;
     Reset =  millis();
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Tienda
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Tienda() {
+  background(ColorNeutro);
+  for (int x = 0; x < width; x = x +width/3) {
+    for (int y = 0; y < height; y = y + height/3) {
+      line(0, y, width, y);
+      line(x, 0, x, height);
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Configurar
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Configurar() {
+  background(ColorNeutro);
+  for (int x = 0; x < width; x = x +width/3) {
+    for (int y = 0; y < height; y = y + height/3) {
+      line(0, y, width, y);
+      line(x, 0, x, height);
+    }
   }
 }
 
