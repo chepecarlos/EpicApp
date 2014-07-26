@@ -3,25 +3,28 @@ class MalaBuena extends MalaBolla {
 
   MalaBuena(float TempX, float TempY, float TempV) {
     super( TempX, TempY, TempV, 0);
-    Creditos = 20;
+    Creditos = 0;
+    Salud = 20;
     Golpe = 0;
   }
 
   MalaBuena(float TempX, float TempY, float TempV, float Theta) {
     super( TempX, TempY, TempV, 0);
-    Creditos = 20;
+    Creditos = 0;
+    Salud = 20;
     Golpe = 0;
   }
 
   MalaBuena(float TempX, float TempY, float TempV, float Theta, float TempT) {
     super( TempX, TempY, TempV, 0, TempT);
-    Creditos = 20;
+    Creditos = 0;
+    Salud = 20;
     Golpe = 0;
   }
 
   void Mostar() {
     super.Mostar();
-    Corazon(X, Y, T);
+    Corazon(Posicion.x, Posicion.y, T);
   }
 }
 

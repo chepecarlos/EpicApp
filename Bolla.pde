@@ -1,20 +1,24 @@
 
 class Bolla {
 
+  PVector Posicion, Velocidad;
   float X, Y;//Posicion
   float Vx, Vy;//Velocidad
   float Vida = 500;//Vida
   float T = 10;//Tamaño
   float Margen = 30;
   float Poder = 100;
+  color BollaColor = color(0,0,0);
 
   Bolla(float TempX, float TempY, float TempV, float Theta) {
     // println("Creado nodo V:"+ TempV + " Theta:" + Theta);
     X = TempX;
     Y = TempY;
-    float V = 10*TempV;
+    Posicion = new PVector(TempX,TempY);
+    float V = TempV;
     Vx = V*sin(Theta);
     Vy = V*cos(Theta);
+    Velocidad = new PVector(Vx,Vy);
     Poder = (Poder*(-V))/10;
     //println(Poder);
   }
@@ -23,14 +27,11 @@ class Bolla {
     if ( Y < Margen) {
       Vida = 0;
     }
-    if ( X < 0 ) {
-      Vx = -Vx;
+    if ( Posicion.x < 0 || Posicion.x > width) {
+      Velocidad.x = - Velocidad.x;
     }
-    else if ( X > width) {
-      Vx = -Vx;
-    }
-    Y += Vy;
-    X += Vx;
+    Posicion.x += Velocidad.x;
+    Posicion.y += Velocidad.y;
   }
 
   boolean SigeViva() {
@@ -45,8 +46,10 @@ class Bolla {
 
   void Mostar() {
     //pushStyle();
+
     fill(ColorBase, Vida);
-    ellipse(X, Y, T, T);
+    ellipse(Posicion.x, Posicion.y, T, T);
+    
     //popStyle();
   }
 }

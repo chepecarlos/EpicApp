@@ -12,7 +12,7 @@ class MalaFuego extends MalaBolla {
   void Mostar() {
     super.Mostar();
     fill(255, 0, 0);
-    ellipse(X, Y, T/2, T/2);
+    ellipse(Posicion.x, Posicion.y, T/2, T/2);
   }
   
   int Poder(){
