@@ -2,8 +2,6 @@
 class Bolla {
 
   PVector Posicion, Velocidad;
-  float X, Y;//Posicion
-  float Vx, Vy;//Velocidad
   float Vida = 500;//Vida
   float T = 10;//Tamaño
   float Margen = 30;
@@ -12,19 +10,14 @@ class Bolla {
 
   Bolla(float TempX, float TempY, float TempV, float Theta) {
     // println("Creado nodo V:"+ TempV + " Theta:" + Theta);
-    X = TempX;
-    Y = TempY;
     Posicion = new PVector(TempX,TempY);
-    float V = TempV;
-    Vx = V*sin(Theta);
-    Vy = V*cos(Theta);
-    Velocidad = new PVector(Vx,Vy);
-    Poder = (Poder*(-V))/10;
+    Velocidad = new PVector(TempV*sin(Theta),TempV*cos(Theta));
+    Poder = (Poder*(-TempV))/10;
     //println(Poder);
   }
 
   void Mover() {
-    if ( Y < Margen) {
+    if ( Posicion.y < Margen) {
       Vida = 0;
     }
     if ( Posicion.x < 0 || Posicion.x > width) {
