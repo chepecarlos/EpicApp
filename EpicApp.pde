@@ -12,6 +12,7 @@ ArrayList<Bolla> Poderes;
 int Limite;
 int PXi, PYi;
 int PXf, PYf;
+PVector Pi, Pf;
 int AchoAtaque;
 int Barra;
 int Puntos, MaxPuntos;
@@ -141,59 +142,6 @@ void draw() {
   //  Tiempo = millis();
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//Funciones con el mouse 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-void mousePressed() {
-
-  if ( Estado == 2) {
-    if ( mouseY > Limite) {
-      PXi = mouseX;
-      PYi = mouseY;
-      PXf = PXi;
-      PYf = PYi;
-    }
-  } else if ( Estado == 1) {
-    float Pollo = height/8;
-    for (int i = 0; i < Modos.size (); i++) {
-      if (mouseY > (i+1.5)*Pollo && mouseY < (i+2.5)*Pollo) {
-        OpModo = i;
-      }
-    }
-  }
-}
-
-void mouseReleased() {
-  if ( Estado == 2) {
-    if ( mouseY > Limite) {
-      float Theta = 0;
-      float V =  dist( PXf, PYf, PXi, PYi)/(AchoAtaque/2);
-      if ( V > 0.99)  V = 1;
-      else if ( V < 0.20) V = 0.20;
-
-      if ( abs(PYi-PYf) != 0) {
-        float T1= PXi-PXf; 
-        float T2= PYi-PYf;
-        float T3 = T1/T2;
-        float T4 = atan(T3);
-        Theta = T4;
-      }
-
-      Proyectiles.add( new Bolla(PXi, PYi, -V, Theta));
-    }
-    PXi = 0;
-    PYi = 0;
-  }
-}
-
-void mouseDragged() {
-  if ( Estado == 2) {
-    if ( (PXi != 0 || PYi != 0)  & mouseY > PYi) {
-      PXf = mouseX;
-      PYf = mouseY;
-    }
-  }
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Pastalla de Game Over
@@ -288,6 +236,8 @@ void Empezar() {
   Vida = 100;
   Puntos = 0;
   Nivel = 1;
+  Pi = null;
+  Pf = null;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Inicio de la aplicacion

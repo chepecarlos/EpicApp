@@ -38,13 +38,13 @@ void Puntos() {
 }
 
 void MAtaque() {
-  if ( PXi != 0 || PYi != 0) {
+  if ( Pi != null) {
     ellipseMode(CENTER);
     noFill();
-    arc(PXi, PYi, AchoAtaque, AchoAtaque, 0, PI);
+    arc(Pi.x, Pi.y, AchoAtaque, AchoAtaque, 0, PI);
     fill(ColorBase);
-    line(PXi, PYi, PXf, PYf);
-    ellipse(PXi, PYi, 10, 10);
+    line(Pi.x, Pi.y, Pf.x, Pf.y);
+    ellipse(Pi.x, Pi.y, 10, 10);
   }
 }
 

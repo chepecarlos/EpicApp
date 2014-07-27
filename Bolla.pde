@@ -16,6 +16,18 @@ class Bolla {
     //println(Poder);
   }
 
+  Bolla(PVector TempP, PVector TempV){
+    Posicion = TempP;
+    Velocidad = TempV;
+    if( Velocidad.y > 0){
+    Velocidad.y = -Velocidad.y;
+    Velocidad.x = -Velocidad.x;
+    }
+    Velocidad = PVector.mult(Velocidad,10);
+  }
+  
+  
+  
   void Mover() {
     if ( Posicion.y < Margen) {
       Vida = 0;
