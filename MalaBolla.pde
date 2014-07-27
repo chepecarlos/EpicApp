@@ -23,7 +23,7 @@ class MalaBolla extends Bolla {
     for ( int i = Enanos.size ()-1; i >= 0; i--) {
       Bolla Pollo = Enanos.get(i);
       PVector D = PVector.sub(Pollo.Posicion, Posicion);
-      float miniD = Pollo.T/2 + T/2;
+      float miniD = (Pollo.T+T)/2;
       if ( D.mag() < miniD) {
         Vida -=  Pollo.Poder;
         Golpe--;
@@ -45,15 +45,17 @@ class MalaBolla extends Bolla {
   }
 
   boolean SigeViva() {
-    if (Vida < 0) {
+    if (Vida <= 0) {
       return true;
-    } 
-    else {
+    } else {
       return false;
     }
   }
-  
-  int Poder(){
+
+  void Esplota() {
+  }
+
+  int Poder() {
     return 0;
   }
 }

@@ -73,6 +73,7 @@ void  ActualizarMalos() {
     }
 
     if (MiniMalo.SigeViva()) {
+      MiniMalo.Esplota();
       Vida += MiniMalo.Creditos;
       if ( Vida > 100) Vida = 100;
       //AnadirPoder(MiniMalo.Poder());
@@ -98,7 +99,7 @@ void Invocar() {
     if ( OP > PEspecial) {
       Malos.add( new MalaBolla( random(100, width-100), -random(height), random(2, 1), random(-PI/4, PI/4), random(50, 200)));
     } else {
-      InvocarEspecial(1);
+      InvocarEspecial(2);
     }
   }
 }
@@ -107,10 +108,13 @@ void InvocarEspecial(int i) {
   switch(i)
   {
   case 0:
-    Malos.add( new MalaBuena(random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
+    Malos.add( new MalaBuena(random(100, width-100), -random(height), random(2, 1), random(-PI/4, PI/4), random(50, 200)));
     break;
   case 1:
-    Malos.add( new MalaFuego(random(100, width-100), -random(height), random(0.10, 0.20), random(-PI/4, PI/4), random(50, 200)));
+    Malos.add( new MalaFuego(random(100, width-100), -random(height), random(2, 1), random(-PI/4, PI/4), random(50, 200)));
+    break;
+  case 2:
+    Malos.add( new MalaBomba(random(100, width-100), -random(height), random(2, 1), random(-PI/4, PI/4), random(50, 200)));
     break;
   }
 }
