@@ -6,28 +6,31 @@ class Bolla {
   float T = 10;//Tamaño
   float Margen = 30;
   float Poder = 100;
-  color BollaColor = color(0,0,0);
+  color BollaColor = color(0, 0, 0);
 
   Bolla(float TempX, float TempY, float TempV, float Theta) {
     // println("Creado nodo V:"+ TempV + " Theta:" + Theta);
-    Posicion = new PVector(TempX,TempY);
-    Velocidad = new PVector(TempV*sin(Theta),TempV*cos(Theta));
+    Posicion = new PVector(TempX, TempY);
+    Velocidad = new PVector(TempV*sin(Theta), TempV*cos(Theta));
     Poder = (Poder*(-TempV))/10;
     //println(Poder);
   }
 
-  Bolla(PVector TempP, PVector TempV){
+  Bolla(PVector TempP, PVector TempV) {
     Posicion = TempP;
     Velocidad = TempV;
-    if( Velocidad.y > 0){
-    Velocidad.y = -Velocidad.y;
-    Velocidad.x = -Velocidad.x;
+    if ( Velocidad.y > 0) {
+      Velocidad.y = -Velocidad.y;
+      Velocidad.x = -Velocidad.x;
+    } else if ( Velocidad.y == 0) {
+      Velocidad.y = -0.1;
     }
-    Velocidad = PVector.mult(Velocidad,10);
+
+    Velocidad = PVector.mult(Velocidad, 10);
   }
-  
-  
-  
+
+
+
   void Mover() {
     if ( Posicion.y < Margen) {
       Vida = 0;
@@ -43,8 +46,7 @@ class Bolla {
     Vida--;
     if (Vida < 0) {
       return true;
-    } 
-    else {
+    } else {
       return false;
     }
   }
@@ -54,7 +56,7 @@ class Bolla {
 
     fill(ColorBase, Vida);
     ellipse(Posicion.x, Posicion.y, T, T);
-    
+
     //popStyle();
   }
 }

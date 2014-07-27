@@ -10,8 +10,6 @@ ArrayList<Bolla> Poderes;
 
 // Variables Globales
 int Limite;
-int PXi, PYi;
-int PXf, PYf;
 PVector Pi, Pf;
 int AchoAtaque;
 int Barra;
